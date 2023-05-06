@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.StandardCharsets;
+
 @Service
 public class LineNotifyService {
 
@@ -20,7 +22,8 @@ public class LineNotifyService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Bearer " + token);
 
-        HttpEntity<String> request = new HttpEntity<>("message=" + message, headers);
+        String encodedMessage = new String(message.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+        HttpEntity<String> request = new HttpEntity<>("message=" + encodedMessage, headers);
 
         ResponseEntity<String> response = restTemplate.postForEntity(LINE_NOTIFY_API_URL, request, String.class);
 
